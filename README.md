@@ -2,11 +2,13 @@
 
 Homebrew tap for [MARVIN](https://github.com/RobertIlisei/MARVIN), the pair-programming AI assistant.
 
+> **Cask token:** `marvin-ai`, not `marvin`. The plain `marvin` token is taken by the [Amazing Marvin](https://www.amazingmarvin.com/) productivity app in the official `homebrew-cask` repo, so we disambiguate with the `-ai` suffix.
+
 ## Install
 
 ```bash
 brew tap RobertIlisei/marvin
-brew install --cask marvin
+brew install --cask marvin-ai
 ```
 
 That's it — MARVIN.app appears in `/Applications`, the bundled sidecar starts with the app, and quitting MARVIN cleans it up. No Swift, Node, or pnpm install required on your machine.
@@ -16,15 +18,15 @@ You'll need Anthropic credentials to use it: either run `claude login` (the Clau
 ## Update
 
 ```bash
-brew upgrade --cask marvin
+brew upgrade --cask marvin-ai
 ```
 
 ## Uninstall
 
 ```bash
-brew uninstall --cask marvin
+brew uninstall --cask marvin-ai
 # or, to also wipe ~/.marvin and the log directory:
-brew uninstall --zap --cask marvin
+brew uninstall --zap --cask marvin-ai
 ```
 
 ## Architecture
@@ -41,4 +43,4 @@ When a new MARVIN release ships:
 2. In `Casks/marvin.rb`:
    - Bump `version "<new>"`
    - Replace `sha256 :no_check` (or the prior hash) with the new SHA-256.
-3. Commit + push. Users get the update next time they `brew upgrade --cask marvin`.
+3. Commit + push. Users get the update next time they `brew upgrade --cask marvin-ai`.

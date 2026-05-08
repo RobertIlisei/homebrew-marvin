@@ -15,7 +15,13 @@
 # release.yml to publish the .zip, copy the printed sha256 from the
 # Actions log into `sha256` below, push.
 
-cask "marvin" do
+# NOTE: cask token is `marvin-ai`, not `marvin` — the homebrew-cask
+# core repo already ships a `marvin` cask for "Amazing Marvin" (a
+# personal-productivity app), so an unqualified `brew install marvin`
+# would resolve to that one. The disambiguating `-ai` suffix keeps
+# the brand recognisable while making `brew install --cask marvin-ai`
+# unambiguous.
+cask "marvin-ai" do
   version "0.1.0"
 
   # The release workflow stamps this sha into the run summary. Bump
@@ -23,8 +29,7 @@ cask "marvin" do
   # a cask whose downloaded zip doesn't match.
   sha256 "4eb03a04a5426f4e9eb82d3302c80f309fccf7bd291d414feabc8f5caa51aa20"
 
-  url "https://github.com/RobertIlisei/MARVIN/releases/download/v#{version}/MARVIN-#{version}-arm64.zip",
-      verified: "github.com/RobertIlisei/MARVIN/"
+  url "https://github.com/RobertIlisei/MARVIN/releases/download/v#{version}/MARVIN-#{version}-arm64.zip"
 
   name "MARVIN"
   desc "Pair-programming AI assistant for macOS"

@@ -21,11 +21,7 @@ cask "marvin" do
   # The release workflow stamps this sha into the run summary. Bump
   # it whenever you bump `version` above — Homebrew refuses to install
   # a cask whose downloaded zip doesn't match.
-  #
-  # The literal `:no_check` placeholder lets `brew install` work
-  # before the first real release exists; replace with the actual
-  # 64-char hex once v0.1.0 has shipped.
-  sha256 :no_check
+  sha256 "4eb03a04a5426f4e9eb82d3302c80f309fccf7bd291d414feabc8f5caa51aa20"
 
   url "https://github.com/RobertIlisei/MARVIN/releases/download/v#{version}/MARVIN-#{version}-arm64.zip",
       verified: "github.com/RobertIlisei/MARVIN/"

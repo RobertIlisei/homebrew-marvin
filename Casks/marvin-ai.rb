@@ -40,12 +40,12 @@ MARVIN_MINISIGN_PUBKEY = <<~PUBKEY.freeze
 PUBKEY
 
 cask "marvin-ai" do
-  version "0.1.8"
+  version "0.1.9"
 
   # The release workflow stamps this sha into the run summary. Bump
   # it whenever you bump `version` above — Homebrew refuses to install
   # a cask whose downloaded zip doesn't match.
-  sha256 "6372f58f0feb193f28083c65e420c06ebf402439f0adaf58e84cea21701436f3"
+  sha256 "96952b02816197710b1b61ec233b90e4af3aa73eeb8126f487e801adebf4eee1"
 
   url "https://github.com/RobertIlisei/MARVIN/releases/download/v#{version}/MARVIN-#{version}-arm64.zip"
 

@@ -23,20 +23,20 @@
 # unambiguous.
 
 # Minisign public key for release-artefact verification (ADR-0026).
-# Single source of truth at install time. The same key is also
-# pinned in this tap's README.md and in the MARVIN repo's
-# `.minisign-pubkey` file at https://github.com/RobertIlisei/MARVIN .
-# Phase 1: pubkey is published for manual verification; Phase 2 will
-# add a cask-side preflight that auto-verifies before the install.
+# Single source of truth at install time. Mirrored in this tap's
+# README.md and in the MARVIN repo's `.minisign-pubkey` file at
+# https://github.com/RobertIlisei/MARVIN/blob/main/.minisign-pubkey .
+# Three pinned copies across two repos — a tap-compromise that
+# swapped this constant would be visibly inconsistent with the
+# MARVIN repo's copy. The rotation procedure is documented in
+# ADR-0026; key fingerprint 0794CFDFA5E629D5.
 #
-# Currently a PLACEHOLDER until @robertilisei generates the key pair
-# and uploads the secret to the MARVIN repo's GitHub Actions secrets
-# (see ADR-0026 §"Key generation"). When the real key lands, replace
-# the second line of the comment block below with the actual pubkey
-# string from `cat ~/.minisign/marvin.pub` (the line starting `RW…`).
+# Phase 1 (current): pubkey is published for manual verification;
+# the cask install path does NOT auto-verify yet. Phase 2 will add
+# a `preflight` step running `minisign -V` before extracting.
 MARVIN_MINISIGN_PUBKEY = <<~PUBKEY.freeze
-  untrusted comment: minisign public key for RobertIlisei/MARVIN
-  PLACEHOLDER — see ADR-0026 in the MARVIN repo for the key-gen procedure
+  untrusted comment: minisign public key 0794CFDFA5E629D5
+  RWTVKeal38+UBwQ3tC8ETdPZkv8fFLchoXdtwi7UI9XMhaJWuUwx4QAQ
 PUBKEY
 
 cask "marvin-ai" do

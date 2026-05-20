@@ -42,8 +42,8 @@ Every MARVIN release zip is signed with [minisign](https://jedisct1.github.io/mi
 **Public key** (pinned here, in [`Casks/marvin-ai.rb`](./Casks/marvin-ai.rb) as `MARVIN_MINISIGN_PUBKEY`, and in the [MARVIN repo's `.minisign-pubkey`](https://github.com/RobertIlisei/MARVIN/blob/main/.minisign-pubkey)):
 
 ```
-untrusted comment: minisign public key for RobertIlisei/MARVIN
-<PLACEHOLDER — the actual pubkey lands when @robertilisei runs the key-gen procedure documented in ADR-0026>
+untrusted comment: minisign public key 0794CFDFA5E629D5
+RWTVKeal38+UBwQ3tC8ETdPZkv8fFLchoXdtwi7UI9XMhaJWuUwx4QAQ
 ```
 
 Three pinned copies of the same key in two different repos. A tap-repo compromise that swapped the cask's pubkey constant would be visibly inconsistent with the MARVIN repo's record — that's the defence.

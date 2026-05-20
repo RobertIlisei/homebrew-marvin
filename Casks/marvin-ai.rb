@@ -22,12 +22,12 @@
 # the brand recognisable while making `brew install --cask marvin-ai`
 # unambiguous.
 cask "marvin-ai" do
-  version "0.1.7"
+  version "0.1.8"
 
   # The release workflow stamps this sha into the run summary. Bump
   # it whenever you bump `version` above — Homebrew refuses to install
   # a cask whose downloaded zip doesn't match.
-  sha256 "c66ba2adbf72bfe52f90b31a6e3dcfdcd9a0a3f99993389e2077757c57877311"
+  sha256 "6372f58f0feb193f28083c65e420c06ebf402439f0adaf58e84cea21701436f3"
 
   url "https://github.com/RobertIlisei/MARVIN/releases/download/v#{version}/MARVIN-#{version}-arm64.zip"
 

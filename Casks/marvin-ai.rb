@@ -21,6 +21,24 @@
 # would resolve to that one. The disambiguating `-ai` suffix keeps
 # the brand recognisable while making `brew install --cask marvin-ai`
 # unambiguous.
+
+# Minisign public key for release-artefact verification (ADR-0026).
+# Single source of truth at install time. The same key is also
+# pinned in this tap's README.md and in the MARVIN repo's
+# `.minisign-pubkey` file at https://github.com/RobertIlisei/MARVIN .
+# Phase 1: pubkey is published for manual verification; Phase 2 will
+# add a cask-side preflight that auto-verifies before the install.
+#
+# Currently a PLACEHOLDER until @robertilisei generates the key pair
+# and uploads the secret to the MARVIN repo's GitHub Actions secrets
+# (see ADR-0026 §"Key generation"). When the real key lands, replace
+# the second line of the comment block below with the actual pubkey
+# string from `cat ~/.minisign/marvin.pub` (the line starting `RW…`).
+MARVIN_MINISIGN_PUBKEY = <<~PUBKEY.freeze
+  untrusted comment: minisign public key for RobertIlisei/MARVIN
+  PLACEHOLDER — see ADR-0026 in the MARVIN repo for the key-gen procedure
+PUBKEY
+
 cask "marvin-ai" do
   version "0.1.8"
 

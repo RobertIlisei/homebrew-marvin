@@ -40,7 +40,7 @@ MARVIN_MINISIGN_PUBKEY = <<~PUBKEY.freeze
 PUBKEY
 
 cask "marvin-ai" do
-  version "0.1.11"
+  version "0.1.12"
 
   # The release workflow stamps this sha into the run summary. Bump
   # it whenever you bump `version` above — Homebrew refuses to install
@@ -50,7 +50,7 @@ cask "marvin-ai" do
   # same URL + ".minisig" suffix. The signature is verifiable against
   # MARVIN_MINISIGN_PUBKEY (above) — Phase 1 of ADR-0026. Phase 2
   # will add a `preflight` step that auto-verifies before extracting.
-  sha256 "53623588dae586e04551d585daea90fc2abd10078051ee1761ba7b80976de9a9"
+  sha256 "80fb7f85f3c641a8de2a2ceb071020eec222cf41a8a0e9f4c5c547fd1ed09100"
 
   url "https://github.com/RobertIlisei/MARVIN/releases/download/v#{version}/MARVIN-#{version}-arm64.zip"
 
@@ -63,13 +63,30 @@ cask "marvin-ai" do
   depends_on arch: :arm64
   depends_on macos: ">= :sonoma"
 
-  app "MARVIN.app"
+  # ── Install location: ~/Applications, not /Applications ──────────────
+  #
+  # macOS 26 (Tahoe) enforces a kernel-level Gatekeeper check that
+  # kills ad-hoc-signed bundles launched from `/Applications` —
+  # process spawns and is immediately killed (RSS stays ~32 KB, no
+  # UI, no logs). The same bundle launched from `~/Applications`
+  # runs normally because user-scope Applications is exempt from
+  # that specific check. See ADR-0027 in the MARVIN repo:
+  #
+  #   https://github.com/RobertIlisei/MARVIN/blob/main/docs/decisions/0027-macos-26-gatekeeper-user-applications.md
+  #
+  # `target:` instructs Homebrew to symlink/copy the bundle to that
+  # exact path. Spotlight, Launchpad, Finder, and the Dock all
+  # recognise `~/Applications` as an Apple-standard app install
+  # location — there is no functional difference for the user
+  # beyond where the bundle physically lives.
+  app "MARVIN.app", target: "~/Applications/MARVIN.app"
 
   # Clean up MARVIN's per-user state on `brew uninstall --zap`. The
-  # `app:` line above already removes /Applications/MARVIN.app on a
+  # `app:` line above already removes ~/Applications/MARVIN.app on a
   # plain uninstall; `zap` is the optional extra that wipes the data
   # directory + log file + the legacy launchd agent (in case the user
-  # ever ran the developer install with --launchd).
+  # ever ran the developer install with --launchd), and a stale
+  # /Applications/MARVIN.app from a pre-0.1.12 install.
   zap trash: [
     "~/.marvin",
     "~/Library/Logs/MARVIN",
@@ -77,13 +94,21 @@ cask "marvin-ai" do
     "~/Library/Application Support/MARVIN",
     "~/Library/Caches/net.marvin.macos",
     "~/Library/Preferences/net.marvin.macos.plist",
+    "/Applications/MARVIN.app",
   ]
 
   caveats <<~EOS
-    MARVIN is ad-hoc signed (no Apple Developer ID). On first launch,
-    macOS may ask you to confirm — that's expected; brew has already
-    stripped the quarantine xattr so the warning is one click, not a
-    deal-breaker.
+    MARVIN.app installs to ~/Applications (not /Applications) — required
+    on macOS 26 where the kernel-level Gatekeeper kills ad-hoc-signed
+    bundles in /Applications. ADR-0027 has the technical detail.
+
+    First launch — one-time Gatekeeper step:
+      1. Double-click MARVIN.app (Finder, Spotlight, or Launchpad).
+      2. macOS shows "Apple could not verify MARVIN.app…" — click Done.
+      3. Open System Settings → Privacy & Security → scroll to Security.
+      4. Find "MARVIN.app was blocked from use…" → click Open Anyway.
+      5. Authorize with Touch ID. MARVIN launches and is whitelisted
+         for the life of the install — you only do this once.
 
     MARVIN needs Anthropic credentials to do anything useful. Either:
       • use the Claude CLI you already have installed (`claude login`), or

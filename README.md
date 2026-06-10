@@ -11,7 +11,9 @@ brew tap RobertIlisei/marvin
 brew install --cask marvin-ai
 ```
 
-That's it — MARVIN.app appears in `/Applications`, the bundled sidecar starts with the app, and quitting MARVIN cleans it up. No Swift, Node, or pnpm install required on your machine.
+That's it — MARVIN.app appears in `~/Applications`, the bundled sidecar starts with the app, and quitting MARVIN cleans it up. No Swift, Node, or pnpm install required on your machine.
+
+> **First launch — one-time Gatekeeper step (macOS 26+).** MARVIN is ad-hoc signed (no paid Apple Developer membership), and macOS 26 kernel-kills ad-hoc bundles in `/Applications` — which is why the cask installs to `~/Applications`. On first double-click macOS shows "Apple could not verify…": click **Done**, then open **System Settings → Privacy & Security**, scroll to **Security**, find "MARVIN.app was blocked…", and click **Open Anyway**. It persists for the life of the install — you do it once. See [ADR-0027](https://github.com/RobertIlisei/MARVIN/blob/main/docs/decisions/0027-macos-26-gatekeeper-user-applications.md).
 
 You'll need Anthropic credentials to use it: either run `claude login` (the Claude CLI handles it) or paste an API key in MARVIN's Settings → Authentication.
 
@@ -31,7 +33,7 @@ brew uninstall --zap --cask marvin-ai
 
 ## Architecture
 
-The cask downloads an ad-hoc-signed `MARVIN.app` from the [MARVIN releases](https://github.com/RobertIlisei/MARVIN/releases). Brew strips the `com.apple.quarantine` xattr during install, which is what lets the unsigned bundle open without Gatekeeper friction. See [ADR-0023](https://github.com/RobertIlisei/MARVIN/blob/main/docs/decisions/0023-brew-distributable-bundled-sidecar.md) for the full bundling design.
+The cask downloads an ad-hoc-signed `MARVIN.app` from the [MARVIN releases](https://github.com/RobertIlisei/MARVIN/releases) and installs it to `~/Applications` (not `/Applications` — macOS 26 kernel-kills ad-hoc bundles launched from `/Applications`; see [ADR-0027](https://github.com/RobertIlisei/MARVIN/blob/main/docs/decisions/0027-macos-26-gatekeeper-user-applications.md)). Brew strips the `com.apple.quarantine` xattr during install; on macOS 26 the user still does the one-time "Open Anyway" above. See [ADR-0023](https://github.com/RobertIlisei/MARVIN/blob/main/docs/decisions/0023-brew-distributable-bundled-sidecar.md) for the full bundling design.
 
 Apple Silicon only for now (`depends_on arch: :arm64`). Intel Macs will need a separate build path; open an issue on the MARVIN repo if that's blocking you.
 
@@ -69,8 +71,8 @@ See [ADR-0026](https://github.com/RobertIlisei/MARVIN/blob/main/docs/decisions/0
 
 When a new MARVIN release ships:
 
-1. Find the new release at https://github.com/RobertIlisei/MARVIN/releases — the workflow attaches `MARVIN-<version>-arm64.zip` and prints the SHA-256 in the release notes.
-2. In `Casks/marvin.rb`:
+1. Find the new release at https://github.com/RobertIlisei/MARVIN/releases — the workflow attaches `MARVIN-<version>-arm64.zip`; its SHA-256 is the asset digest (or compute it locally with `shasum -a 256`).
+2. In `Casks/marvin-ai.rb`:
    - Bump `version "<new>"`
-   - Replace `sha256 :no_check` (or the prior hash) with the new SHA-256.
+   - Replace the `sha256` with the new release's hash (Homebrew refuses to install a cask whose downloaded zip doesn't match).
 3. Commit + push. Users get the update next time they `brew upgrade --cask marvin-ai`.

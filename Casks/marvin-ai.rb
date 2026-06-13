@@ -138,5 +138,4 @@ cask "marvin-ai" do
     See:
       https://github.com/RobertIlisei/MARVIN#installation
   EOS
-
 end

@@ -62,7 +62,7 @@ cask "marvin-ai" do
   # Apple Silicon only for now. Adding x86_64 means a second build
   # path in release.yml and a second SHA — defer until someone asks.
   depends_on arch: :arm64
-  depends_on macos: ">= :sonoma"
+  depends_on macos: :sonoma
 
   # ── Install location: ~/Applications, not /Applications ──────────────
   #

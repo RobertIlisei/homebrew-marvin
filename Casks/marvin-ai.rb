@@ -82,6 +82,26 @@ cask "marvin-ai" do
   # beyond where the bundle physically lives.
   app "MARVIN.app", target: "~/Applications/MARVIN.app"
 
+  # ── Strip quarantine so the ad-hoc bundle launches ──────────────────
+  #
+  # Homebrew quarantines cask artifacts by default. MARVIN is ad-hoc
+  # signed (no Apple Developer ID, not notarized), and on macOS 26 a
+  # quarantined ad-hoc app is killed by Gatekeeper with the misleading
+  # "“MARVIN.app” is damaged and can't be opened. You should move it to
+  # the Bin." Stripping com.apple.quarantine clears that — the ad-hoc
+  # signature itself is valid and satisfies its Designated Requirement.
+  #
+  # must_succeed: false — the bundled sidecar's pnpm tree contains a
+  # couple of dangling optional-dep symlinks (sharp's @img/*), which make
+  # `xattr -r` exit non-zero even though every real file is cleared. That
+  # exit code must not abort the install.
+  postflight do
+    system_command "/usr/bin/xattr",
+                   args:         ["-d", "-r", "com.apple.quarantine",
+                                  File.expand_path("~/Applications/MARVIN.app")],
+                   must_succeed: false
+  end
+
   # Clean up MARVIN's per-user state on `brew uninstall --zap`. The
   # `app:` line above already removes ~/Applications/MARVIN.app on a
   # plain uninstall; `zap` is the optional extra that wipes the data
@@ -119,23 +139,4 @@ cask "marvin-ai" do
       https://github.com/RobertIlisei/MARVIN#installation
   EOS
 
-  # ── Strip quarantine so the ad-hoc bundle launches ──────────────────
-  #
-  # Homebrew quarantines cask artifacts by default. MARVIN is ad-hoc
-  # signed (no Apple Developer ID, not notarized), and on macOS 26 a
-  # quarantined ad-hoc app is killed by Gatekeeper with the misleading
-  # "“MARVIN.app” is damaged and can't be opened. You should move it to
-  # the Bin." Stripping com.apple.quarantine clears that — the ad-hoc
-  # signature itself is valid and satisfies its Designated Requirement.
-  #
-  # must_succeed: false — the bundled sidecar's pnpm tree contains a
-  # couple of dangling optional-dep symlinks (sharp's @img/*), which make
-  # `xattr -r` exit non-zero even though every real file is cleared. That
-  # exit code must not abort the install.
-  postflight do
-    system_command "/usr/bin/xattr",
-                   args:         ["-d", "-r", "com.apple.quarantine",
-                                  File.expand_path("~/Applications/MARVIN.app")],
-                   must_succeed: false
-  end
 end

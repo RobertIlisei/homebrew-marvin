@@ -41,7 +41,7 @@ MARVIN_MINISIGN_PUBKEY = <<~PUBKEY.freeze
 PUBKEY
 
 cask "marvin-ai" do
-  version "0.1.50"
+  version "0.1.51"
 
   # The release workflow stamps this sha into the run summary. Bump
   # it whenever you bump `version` above — Homebrew refuses to install
@@ -51,7 +51,7 @@ cask "marvin-ai" do
   # same URL + ".minisig" suffix. The signature is verifiable against
   # MARVIN_MINISIGN_PUBKEY (above) — Phase 1 of ADR-0026. Phase 2
   # will add a `preflight` step that auto-verifies before extracting.
-  sha256 "83935c0086750866a09e10656f58f9b38849f7046016b7c5b9f46d5807c9f6b6"
+  sha256 "b35514a720333c16b0b086177d7ff094873c0e1fbfb65e835c56e64d8f13e28a"
 
   url "https://github.com/RobertIlisei/MARVIN/releases/download/v#{version}/MARVIN-#{version}-arm64.zip"
 
